@@ -5,7 +5,6 @@ By Amy Jorgensen
 """
 
 from tkinter import *
-from functools import partial
 
 
 class Converter:
@@ -43,13 +42,13 @@ class Converter:
         self.converter_btn_frame = Frame(self.converter_frame, bg=bg_colour)
         self.converter_btn_frame.grid(row=3, pady=10)
 
-            # Celsius button (row 0, column 0)
+        # Celsius button (row 0, column 0)
         self.to_c_btn = Button(self.converter_btn_frame,
                                text="To Centigrade", font="Arial 10 bold",
                                bg="#49758c", fg="white", padx=10, pady=10)
         self.to_c_btn.grid(row=0, column=0, padx=10)
 
-            # Fahrenheit button (row 0, column 0)
+        # Fahrenheit button (row 0, column 0)
         self.to_f_btn = Button(self.converter_btn_frame,
                                text="To Fahrenheit", font="Arial 10 bold",
                                bg="#ad5771", fg="white", padx=10, pady=10)
@@ -66,18 +65,18 @@ class Converter:
         self.hist_help_btn_frame = Frame(self.converter_frame, bg=bg_colour)
         self.hist_help_btn_frame.grid(row=5, pady=5)
 
-             # history button (row 0, column 0)
+        # history button (row 0, column 0)
         self.calc_hist_btn = Button(self.hist_help_btn_frame,
-                               text="Calculate History", font="Arial 10 bold",
-                               bg="#558757", fg="white", width=15)
+                                    text="Calculate History",
+                                    font="Arial 10 bold", bg="#558757",
+                                    fg="white", width=15)
         self.calc_hist_btn.grid(row=0, column=0, padx=5)
 
-            # help button (row 0, column 1)
+        # help button (row 0, column 1)
         self.help_btn = Button(self.hist_help_btn_frame,
                                text="Help", font="Arial 10 bold",
                                bg="#558757", fg="white", width=5)
         self.help_btn.grid(row=0, column=1, padx=5)
-
 
 
 # MAIN ROUTINE
