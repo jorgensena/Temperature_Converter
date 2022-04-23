@@ -1,6 +1,7 @@
 # Started with 09_History_GUI_v5
 from tkinter import *
 from functools import partial  # To prevent unwanted windows
+import re
 
 
 class Converter:
@@ -32,7 +33,8 @@ class Converter:
         # history Button (row 1)
         self.history_button = Button(self.converter_frame, text="History",
                                      font=("Arial", "14"), padx=10, pady=10,
-                                     command=lambda: self.history(self.all_calc_list))
+                                     command=lambda: self.history
+                                     (self.all_calc_list))
         self.history_button.grid(row=1)
 
         if len(self.all_calc_list) == 0:
@@ -52,7 +54,7 @@ class History:
         # sets up child window (ie. history box)
         self.history_box = Toplevel()
 
-        # if users press cross at top, closes history and 'releases' history button
+        # if cross pressed, closes history and 'releases' history button
         self.history_box.protocol('WM_DELETE_WINDOW',
                                   partial(self.close_history, partner))
 
@@ -101,8 +103,8 @@ class History:
 
         # Export Button
         self.export_button = Button(self.export_dismiss_frame, text="Export",
-                                 font="Arial 12 bold",
-                                 command=self.export)
+                                    font="Arial 12 bold",
+                                    command=lambda: self.export(calc_history))
         self.export_button.grid(row=0, column=0)
 
         # Dismiss Button
@@ -116,12 +118,14 @@ class History:
         partner.history_button.config(state=NORMAL)
         self.history_box.destroy()
 
-    def export(self):
-        get_export = Export(self)
+    def export(self, calc_history):
+        Export(self, calc_history)
 
 
 class Export:
-    def __init__(self, partner):
+    def __init__(self, partner, calc_history):
+        print(calc_history)  # for testing purposes
+
         background = "#f5e7b5"  # beige
 
         # disable export button
@@ -130,7 +134,7 @@ class Export:
         # sets up child window (ie. export box)
         self.export_box = Toplevel()
 
-        # if users press cross at top, closes export and 'releases' export button
+        # if cross pressed, closes export and 'releases' export button
         self.export_box.protocol('WM_DELETE_WINDOW', partial(self.close_export,
                                                              partner))
 
@@ -160,25 +164,80 @@ class Export:
                                       "replaced with your calculation history",
                                  justify=LEFT, bg="#ebc091",  # orange
                                  font="Arial 10 italic", fg="maroon",
-                                 wrap=225, padx=10, pady=10)
-        self.export_text.grid(row=2)
+                                 wrap=225, padx=10, pady=5)
+        self.export_text.grid(row=2, pady=10)
 
         # Filename entry box (row 3)
         self.filename_entry = Entry(self.export_frame, width=20,
                                     font="Arial 14 bold", justify=CENTER)
-        self.filename_entry.grid(row=3, pady=10)
+        self.filename_entry.grid(row=3)
+
+        # Error Message labels (row 4)
+        self.save_error_label = Label(self.export_frame, text="", fg="maroon",
+                                      bg=background)
+        self.save_error_label.grid(row=4)
 
         # Save / Cancel Frame (row 4)
         self.save_cancel_frame = Frame(self.export_frame)
-        self.save_cancel_frame.grid(row=4, pady=10)
+        self.save_cancel_frame.grid(row=5, pady=10)
 
         # Save and Cancel Button (row 0 of save_cancel_frame)
-        self.save_button = Button(self.save_cancel_frame, text="Save")
+        self.save_button = Button(self.save_cancel_frame, text="Save",
+                                  command=partial(lambda: self.save_history
+                                  (partner, calc_history)))
         self.save_button.grid(row=0, column=0)
 
         self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
-                                    command=partial(self.close_export, partner))
+                                    command=partial(self.close_export,
+                                                    partner))
         self.cancel_button.grid(row=0, column=1)
+
+    def save_history(self, partner, calc_history):
+        # Regular Expression to check filename can be upper or lower case
+        # letters, numbers or underscore
+        valid_char = "[A-Za-z0-9_]"
+        has_error = "no"
+
+        filename = self.filename_entry.get()
+        print(filename)
+
+        for letter in filename:
+            if re.match(valid_char, letter):
+                continue  # If the letter is valid, goes back and checks next
+
+            elif letter == " ":  # Otherwise, find problem
+                error_type = "(no spaces allowed)"
+            else:
+                error_type = f"(no {letter}'s allowed)"
+            has_error = "yes"
+
+        if filename == "":
+            error_type = "can't be blank"
+            has_error = "yes"
+
+        if has_error == "yes":
+            # Display error message
+            self.save_error_label.config(text=f"Invalid filename - "
+                                              f"{error_type}")
+            # Change entry box background to orange
+            self.filename_entry.config(bg="#ebc091")
+            print()
+        else:
+            # If there are no errors, generate text and file and then close
+            # dialogue, Add .txt suffix
+            filename = filename + ".txt"
+
+            # Create file to hole data
+            f = open(filename, "w+")
+
+            for item in calc_history:
+                f.write(item + "\n")
+
+            # close file
+            f.close()
+
+            # Close dialogue
+            self.close_export(partner)
 
     def close_export(self, partner):
         # Put export button back to normal...

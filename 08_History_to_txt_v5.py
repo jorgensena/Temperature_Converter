@@ -13,7 +13,9 @@ while has_error == "yes":
     filename = input("Enter a filename: ")
     has_error = "no"
 
-    valid_char = "[A-Za-z0-9]"
+    # Regular Expression to check filename can be upper or lower case letters,
+    # numbers or underscore
+    valid_char = "[A-Za-z0-9_]"
     for letter in filename:
         if re.match(valid_char, letter):
             continue  # If the letter is valid, goes back and checks the next

@@ -1,0 +1,3 @@
+0 degrees F is -17.8 degrees C
+0 degrees C is 32 degrees F
+100 degrees F is 37.8 degrees C

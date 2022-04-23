@@ -1,0 +1,8 @@
+0 degrees F is -17.8 degrees C
+0 degrees C is 32 degrees F
+-20 degrees C is -4 degrees F
+-40 degrees F is -40 degrees C
+8 degrees F is -13.3 degrees C
+12 degrees F is -11.1 degrees C
+32 degrees C is 89.6 degrees F
+15 degrees C is 59 degrees F
